@@ -60,6 +60,26 @@ namespace ASC_ode
     }
   };
 
+  // ytilde = y_n + tau / 2 f(y_n)
+  // y_{n+1} = y_n + tau f(ytilde)
+  class ImprovedEuler : public TimeStepper
+  {
+    Vector<> m_vecf;// allocated once, not in every step
+    Vector<> m_ytilde;
+  public:
+    ImprovedEuler(std::shared_ptr<NonlinearFunction> rhs)
+    : TimeStepper(rhs), m_vecf(rhs->dimF()), m_ytilde(rhs->dimX()) {}
+    void doStep(double tau, VectorView<double> y) override
+    {
+
+      this->m_rhs->evaluate(y, m_vecf);
+      m_ytilde = y + (tau / 2) * m_vecf;
+
+      this->m_rhs->evaluate(m_ytilde, m_vecf);
+      y += tau * m_vecf;
+    }
+  };
+
 
   
 

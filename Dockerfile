@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-dev \
     python3-pybind11 \
+    python3-numpy \
+    python3-matplotlib \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
