@@ -1,0 +1,11 @@
+services:
+  dev:
+    image: asc-ode:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    command: ["sleep", "infinity"]
+    init: true
