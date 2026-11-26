@@ -80,6 +80,34 @@ namespace ASC_ode
     }
   };
 
+  // solves y - y_n - tau/2 * (f(y_n) + f(y)) with Newton's method. The equation is built
+  // once by the function algebra, y_n and tau are updated in every step
+  class CrankNicolson : public TimeStepper
+  {
+    std::shared_ptr<NonlinearFunction> m_equ;
+    Vector<> m_vecf;// allocated once, not in every step
+    std::shared_ptr<ConstantFunction> m_f;// allocated once, not in every step
+    std::shared_ptr<Parameter> m_tau;
+    std::shared_ptr<ConstantFunction> m_yold;
+  public:
+    CrankNicolson(std::shared_ptr<NonlinearFunction> rhs) 
+    : TimeStepper(rhs), m_vecf(rhs->dimF()), m_tau(std::make_shared<Parameter>(0.0)) 
+    {
+      m_yold = std::make_shared<ConstantFunction>(rhs->dimX());
+      m_f = std::make_shared<ConstantFunction>(rhs->dimF());
+      auto ynew = std::make_shared<IdentityFunction>(rhs->dimX());
+      m_equ = ynew - m_yold - (m_tau * 0.5) * (m_f + m_rhs);
+    }
+
+    void doStep(double tau, VectorView<double> y) override
+    {
+      m_yold->set(y);
+      this->m_rhs->evaluate(y, m_vecf);
+      m_f->set(m_vecf);
+      m_tau->set(tau);
+      NewtonSolver(m_equ, y);
+    }
+  }
 
   
 
