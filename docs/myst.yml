@@ -1,13 +1,18 @@
 # Jupyter Book 2 configuration, see https://jupyterbook.org and https://mystmd.org/guide/frontmatter
 version: 1
 project:
-  title: ASC-ODE
+  title: Team 15 - ASC-ODE
   description: A C++ library for solving ordinary differential equations
   authors:
-    - name: Your Name            # put your names here
-  github: https://github.com/TUWien-ASC/ASC-ODE   # change to your fork
+    - name: Filip Golonka
+    - name: Kai Ritter
+    - name: Philipp Schricker
+    - name: Philipp Weber
+  github: https://github.com/nssc-1-team-15/ASC-ODE   # change to your fork
   toc:
-    - file: intro.md
+    - file: sites/intro.md
+    - file: sites/timesteppers.md
+    - file: sites/plot_styleguide.md
     # add more pages of your user manual here, e.g.
     # - file: timesteppers.md
 
