@@ -93,6 +93,17 @@ namespace ASC_ode
   template <size_t N, typename T = double>
   auto operator+ (T a, const AutoDiff<N, T>& b) { return AutoDiff<N, T>(a) + b; }
 
+  template <size_t N, typename T = double>
+  AutoDiff<N, T> operator- (const AutoDiff<N, T>& a, const AutoDiff<N, T>& b)
+  {
+    AutoDiff<N, T> result(a.value() - b.value());
+    for (size_t i = 0; i < N; i++)
+      result.deriv()[i] = a.deriv()[i] - b.deriv()[i];
+    return result;
+  }
+
+  template <size_t N, typename T = double>
+  auto operator-(T a, const AutoDiff<N, T>& b) { return AutoDiff<N, T>(a) - b; }
 
   // product rule
   template <size_t N, typename T = double>
@@ -104,9 +115,21 @@ namespace ASC_ode
     return result;
   }
 
+  // quotient rule
+  template <size_t N, typename T = double>
+  AutoDiff<N, T> operator/ (const AutoDiff<N, T>& a, const AutoDiff<N, T>& b)
+  {
+    AutoDiff<N, T> result(a.value() / b.value());
+    for (size_t i = 0; i < N; i++)
+      result.deriv()[i] = (a.deriv()[i] * b.value() - a.value() * b.deriv()[i]) / (b.value() * b.value());
+    return result;
+  }
   // sin and cos of doubles must still be found next to the AutoDiff versions
   using std::sin;
   using std::cos;
+
+  using std::exp;
+  using std::log;
 
   // chain rule
   template <size_t N, typename T = double>
@@ -118,6 +141,34 @@ namespace ASC_ode
     return result;
   }
 
+  template <size_t N, typename T = double>
+  AutoDiff<N, T> cos(const AutoDiff<N, T> &a)
+  {
+    AutoDiff<N, T> result(cos(a.value()));
+    for (size_t i = 0; i < N; i++)
+        result.deriv()[i] = T(-1) * sin(a.value()) * a.deriv()[i];
+      return result;
+  }
+
+  template <size_t N, typename T = double>
+  AutoDiff<N, T> exp(const AutoDiff<N, T> &a)
+  {
+    AutoDiff<N, T> result(exp(a.value()));
+    for (size_t i = 0; i < N; i++)
+        result.deriv()[i] = exp(a.value()) * a.deriv()[i];
+      return result;
+  }
+
+  template <size_t N, typename T = double>
+  AutoDiff<N, T> log(const AutoDiff<N, T> &a)
+  {
+    AutoDiff<N, T> result(log(a.value()));
+    for (size_t i = 0; i < N; i++)
+        result.deriv()[i] = a.deriv()[i] / a.value();
+      return result;
+  }
+
+  
 
 } // namespace ASC_ode
 
