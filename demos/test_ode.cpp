@@ -44,10 +44,12 @@ int main()
 
   Vector<> y = { 1, 0 };  // initializer list
   auto rhs = std::make_shared<MassSpring>(1.0, 1.0);
+  
+    // choose one of the time-stepping methods:
 
-  // choose one of the time-stepping methods:
-
-  // ExplicitEuler stepper(rhs);
+  //ExplicitEuler stepper(rhs);
+  //ImprovedEuler stepper(rhs);
+  CrankNicolson stepper(rhs);
   // ImplicitEuler stepper(rhs);
 
   // 2-stage Gauss-Legendre, tabulated Butcher tableau
